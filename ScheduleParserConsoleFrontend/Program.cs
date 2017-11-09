@@ -8,12 +8,11 @@ namespace ScheduleParserConsoleFrontend
     {
         public static async Task Main(string[] args)
         {
-            var parser = new FacultyPageParser();
-            await parser.GetSchedulePlansListAsync();
+            var director = new SchedulePlansDirector(new FacultyPageParser(), null, null);
 
+            await director.FacultyPageParser.GetSchedulePlansListAsync();
 
-
-            Console.WriteLine("Hello World!");
+            Console.ReadKey();
         }
     }
 }
