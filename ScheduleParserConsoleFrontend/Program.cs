@@ -8,9 +8,10 @@ namespace ScheduleParserConsoleFrontend
     {
         public static async Task Main(string[] args)
         {
-            var director = new SchedulePlansDirector(new FacultyPageParser(), null, null);
+            var director = new SchedulePlansDirector(new FacultyPageParser(), new ScheduleFilesDownloader(),  null, null);
 
-            await director.FacultyPageParser.GetSchedulePlansListAsync();
+            await director.GetSchedulePlansLinks();
+            await director.GetSchedulePlansFiles();
 
             Console.ReadKey();
         }
