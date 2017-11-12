@@ -4,8 +4,7 @@ using System.Text;
 
 namespace ScheduleParserBackend.Interfaces
 {
-    public interface IFacultyPlansParserExcel: IFacultyPlansParser
+    public interface IFinalParsingResult
     {
-        IParsingResultExcel Parse();
     }
 }

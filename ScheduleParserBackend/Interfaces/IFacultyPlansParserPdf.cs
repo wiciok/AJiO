@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace ScheduleParserBackend.Interfaces
 {
     public interface IFacultyPlansParserPdf: IFacultyPlansParser
     {
-        new IParsingResultPdf Parse();
+        IParsingResultPdf Parse(Stream file);
     }
 }

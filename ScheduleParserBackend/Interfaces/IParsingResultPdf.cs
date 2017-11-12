@@ -6,5 +6,7 @@ namespace ScheduleParserBackend.Interfaces
 {
     public interface IParsingResultPdf: IParsingResult
     {
+        bool PatternOccured { get; }
+        int PatternOccurenciesNumber { get; set; }
     }
 }

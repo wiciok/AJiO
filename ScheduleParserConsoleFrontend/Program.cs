@@ -8,10 +8,23 @@ namespace ScheduleParserConsoleFrontend
     {
         public static async Task Main(string[] args)
         {
-            var director = new SchedulePlansDirector(new FacultyPageParser(), new ScheduleFilesDownloader(),  null, null);
+            const string pattern = "F112";
 
-            await director.GetSchedulePlansLinks();
-            await director.GetSchedulePlansFiles();
+            var director = new SchedulePlansDirector(new FacultyPageParser(), new ScheduleFilesDownloader(),  new PdfParser(pattern), null);
+
+            try
+            {
+                await director.GetSchedulePlansLinks();
+                await director.GetSchedulePlansFiles();
+                director.ParsePdfs();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+
+           
 
             Console.ReadKey();
         }

@@ -6,6 +6,5 @@ namespace ScheduleParserBackend.Interfaces
 {
     public interface IFacultyPlansParser
     {
-        IParsingResult Parse();
     }
 }
