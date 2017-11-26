@@ -13,7 +13,7 @@ namespace ScheduleParserBackend
         private IEnumerable<string> _schedulePlansLinks;
         private IList<Tuple<Stream, ScheduleFileType>> _scheduleFiles;
         private IList<IParsingResultPdf> _parsingResultsPdf;
-        //private IEnumerable<IParsingResultExcel> _parsingResultExcel;
+        private IList<IParsingResultExcel> _parsingResultsExcel;
 
         private readonly IFacultyPageParser _facultyPageParser;
         private readonly IScheduleFilesDownloader _scheduleFilesDownloader;
@@ -31,14 +31,13 @@ namespace ScheduleParserBackend
             _facultyPageParser = facultyPageParser;
             _scheduleFilesDownloader = scheduleFilesDownloader;
             _excelParser = excelParser;
-            _pdfParser = pdfParser;          
-            
-            _parsingResultsPdf = new List<IParsingResultPdf>();
+            _pdfParser = pdfParser;                    
         }
 
-        public async Task GetSchedulePlansLinks()
+        public async Task<IEnumerable<string>> GetSchedulePlansLinks()
         {
             _schedulePlansLinks = await _facultyPageParser.GetSchedulePlansListAsync();
+            return _schedulePlansLinks;
         }
 
         public async Task GetSchedulePlansFiles()
@@ -46,22 +45,34 @@ namespace ScheduleParserBackend
             _scheduleFiles = await _scheduleFilesDownloader.GetSchedulePlansFiles(_schedulePlansLinks);
         }
 
-        public void ParsePdfs()
+        public void ParsePdfs(string pattern)
         {
+            _parsingResultsPdf = new List<IParsingResultPdf>();
+
             var pdfFiles = _scheduleFiles
                 .Where(x => x.Item2.Equals(ScheduleFileType.Pdf))
                 .Select(x => x.Item1);
 
             foreach (var file in pdfFiles)
             { 
-                var parsingResult = _pdfParser.Parse(file);
+                var parsingResult = _pdfParser.Parse(file, pattern);
                 _parsingResultsPdf.Add(parsingResult);
             }
         }
 
-        public void ParseExcel()
+        public void ParseExcel(string pattern)
         {
-            throw new NotImplementedException();
+            _parsingResultsExcel = new List<IParsingResultExcel>();
+
+            var excelFiles = _scheduleFiles
+                .Where(x => x.Item2.Equals(ScheduleFileType.Xls))
+                .Select(x => x.Item1);
+
+            foreach (var file in excelFiles)
+            {
+                var parsingResult = _excelParser.Parse(file, pattern);
+                _parsingResultsExcel.Add(parsingResult);
+            }
         }
 
         public IFinalParsingResult CombineResults()

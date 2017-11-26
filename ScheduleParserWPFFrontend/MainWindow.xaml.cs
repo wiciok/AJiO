@@ -10,7 +10,7 @@ namespace ScheduleParserWPFFrontend
     /// </summary>
     public partial class MainWindow : Window
     {
-        private SchedulePlansDirector _schedulePlansDirector;
+        private readonly SchedulePlansDirector _schedulePlansDirector;
         private string _pattern = "F112";
         private int _scheduleOffsetInMinutes = 0;
         private const string FacultyWebpage = "http://www.fmi.pk.edu.pl/?page=rozklady_zajec.php";
@@ -19,7 +19,7 @@ namespace ScheduleParserWPFFrontend
         {
             InitializeComponent();
             RoomCodeTbx.Text = _pattern;
-            _schedulePlansDirector = new SchedulePlansDirector(new FacultyPageParser(), new ScheduleFilesDownloader(), new PdfParser(_pattern), null);
+            _schedulePlansDirector = new SchedulePlansDirector(new FacultyPageParser(), new ScheduleFilesDownloader(), new PdfParser(), null);
             FacultyWebpageTextBox.Text = FacultyWebpage;
         }
 
@@ -32,10 +32,7 @@ namespace ScheduleParserWPFFrontend
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            int newValue;
-            int.TryParse((sender as TextBox)?.Text, out newValue);
-
-            if (newValue != _scheduleOffsetInMinutes)
+            if(int.TryParse((sender as TextBox)?.Text, out var newValue))
                 _scheduleOffsetInMinutes = newValue;
         }
 
@@ -52,6 +49,8 @@ namespace ScheduleParserWPFFrontend
             DownloadedPlansLinksTextBlock.Text = strBuilder.ToString();
 
             await _schedulePlansDirector.GetSchedulePlansFiles();
+            _schedulePlansDirector.ParsePdfs(_pattern);
+            //_schedulePlansDirector.ParseExcel();
         }
     }
 }

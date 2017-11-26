@@ -15,7 +15,16 @@
         <Button Content="Zapisz plik" HorizontalAlignment="Left" Margin="10,274,0,0" VerticalAlignment="Top" Width="497" Height="35"/>
         <Label Content="Uruchom tyle minut przed zajęciami:" HorizontalAlignment="Left" Margin="10,232,0,0" VerticalAlignment="Top"/>
         <Label Content="Kod sali:" HorizontalAlignment="Left" Margin="328,232,0,0" VerticalAlignment="Top" Height="26"/>
-        <TextBox Name="RoomCodeTbx" HorizontalAlignment="Left" Height="26" Margin="387,232,0,0" TextWrapping="Wrap" VerticalContentAlignment="Center" Text="Wpisz kod sali" VerticalAlignment="Top" Width="120" TextChanged="RoomCodeTbx_TextChanged"/>
+        <TextBox Name="RoomCodeTbx" 
+                 HorizontalAlignment="Left" 
+                 Height="26" 
+                 Margin="387,232,0,0" 
+                 TextWrapping="Wrap" 
+                 VerticalContentAlignment="Center" 
+                 VerticalAlignment="Top" 
+                 Width="120" 
+                 TextChanged="RoomCodeTbx_TextChanged"
+        />
 
     </Grid>
 </Window>

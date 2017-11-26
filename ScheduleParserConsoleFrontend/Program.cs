@@ -10,13 +10,13 @@ namespace ScheduleParserConsoleFrontend
         {
             const string pattern = "F112";
 
-            var director = new SchedulePlansDirector(new FacultyPageParser(), new ScheduleFilesDownloader(),  new PdfParser(pattern), null);
+            var director = new SchedulePlansDirector(new FacultyPageParser(), new ScheduleFilesDownloader(),  new PdfParser(), null);
 
             try
             {
                 await director.GetSchedulePlansLinks();
                 await director.GetSchedulePlansFiles();
-                director.ParsePdfs();
+                director.ParsePdfs(pattern);
             }
             catch (Exception e)
             {

@@ -7,6 +7,6 @@ namespace ScheduleParserBackend.Interfaces
 {
     public interface IFacultyPlansParserPdf: IFacultyPlansParser
     {
-        IParsingResultPdf Parse(Stream file);
+        IParsingResultPdf Parse(Stream file, string patternToSearch);
     }
 }
