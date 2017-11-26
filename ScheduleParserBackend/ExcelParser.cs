@@ -1,42 +1,18 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
 using NPOI.SS.UserModel;
-using NPOI.XSSF.UserModel;
 using ScheduleParserBackend.Interfaces;
 
 namespace ScheduleParserBackend
 {
-    public class CellData
-    {
-        public CellData(ICell cell, DateTime startTime, DateTime endTime)
-        {
-            Cell = cell;
-            StartTime = startTime;
-            EndTime = endTime;
-        }
-
-        public DateTime StartTime;
-        public DateTime EndTime;
-        public ICell Cell;
-    }
-
-    public class ParsingResultExcel : IParsingResultExcel
-    {
-        public IList<CellData> CellsList;
-    }
-
     public class ExcelParser : IFacultyPlansParserExcel
     {
         private IList<ICell> _cellsWithPattern;
         private ISheet _workingSheet;
-        private int _columnWithHoursIndex = 2;
-        private readonly TimeSpan _oneCellNegativeTimeSpan = TimeSpan.FromMinutes(-15);
+        private int _columnWithHoursIndex = 1;
         private readonly TimeSpan _oneCellTimeSpan = TimeSpan.FromMinutes(15);
 
         public IParsingResultExcel Parse(Stream file, string patternToSearch)
@@ -49,11 +25,11 @@ namespace ScheduleParserBackend
             var list = _cellsWithPattern.Select(delegate (ICell cell)
             {
                 var startTime = GetStartTimeForCell(cell);
-                return new CellData(cell, startTime, GetEndTimeForCell(cell, startTime));
+                return new ScheduleEntry(startTime, GetEndTimeForCell(cell, startTime));
             });
 
 
-            return null;
+            return new ParsingResultExcel { ScheduleEntriesList = list.ToList() };
         }
 
         private IList<ICell> SearchAllCellsForPattern(string pattern)
@@ -74,7 +50,7 @@ namespace ScheduleParserBackend
                 }
             }
 
-            return cellsWithPattern;
+            return cellsWithPattern.ToList();
         }
 
         private DateTime GetStartTimeForCell(ICell cell)
@@ -90,11 +66,11 @@ namespace ScheduleParserBackend
             }
             else
             {
-                SearchForNextFilledHourCell(cell).Deconstruct(out var filledHourCell, out var cellSpan);
+                SearchForNextFilledHourCell(hourCell).Deconstruct(out var filledHourCell, out var cellSpan);
                 startTime = ParseHourCellToDateTime(filledHourCell.StringCellValue);
                 for (var i = 0; i < cellSpan; i++)
                 {
-                    startTime.Add(_oneCellNegativeTimeSpan);
+                    startTime = startTime.Add(_oneCellTimeSpan);
                 }
             }
 
@@ -113,17 +89,44 @@ namespace ScheduleParserBackend
                     .GetRow(currentCheckedCell.RowIndex - 1)
                     .GetCell(_columnWithHoursIndex);
                 span++;
-            } while (!string.IsNullOrEmpty(currentCheckedCell.StringCellValue));
+            } while (string.IsNullOrEmpty(currentCheckedCell.StringCellValue));
 
             return new Tuple<ICell, int>(currentCheckedCell, span);
         }
 
         private DateTime GetEndTimeForCell(ICell cell, DateTime startTime)
         {
-            throw new NotImplementedException();
+            var span = 0;
+            var currentCheckedCell = cell;
+            var cellIndex = cell.ColumnIndex;
+
+            try
+            {
+                do
+                {
+                    currentCheckedCell = _workingSheet
+                        .GetRow(currentCheckedCell.RowIndex + 1)
+                        .GetCell(cellIndex);
+                    span++;
+                } while (currentCheckedCell.IsMergedCell && string.IsNullOrEmpty(currentCheckedCell.StringCellValue));
+            }
+            catch (NullReferenceException ex)
+            {
+                //NPOI incorrectly throws NullReferenceExceptions on GetCell method, when its possible to get problematic cell via Cells[index]
+                //this is just workaaround for this issue
+            }
+           
+            var endTime = startTime;
+
+            for (var i = 0; i < span; i++)
+            {
+                endTime = endTime.Add(_oneCellTimeSpan);
+            }
+
+            return endTime;
         }
 
-        private DateTime ParseHourCellToDateTime(string text)
+        private static DateTime ParseHourCellToDateTime(string text)
         {
             text = text.Replace('.', ':');
             text = text.PadLeft(5, '0');
