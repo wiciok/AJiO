@@ -49,6 +49,7 @@ namespace ScheduleParserBackend
                     .Where(x => x.Attributes["href"].Value.Contains("harmonogram"));
 
             var schedulePlansLinks = schedulePlansNodes.Select(x => x.Attributes["href"].Value);
+            schedulePlansLinks = schedulePlansLinks.Where(x=>!x.ToLower().Contains("niestacjonarne"));
 
             return schedulePlansLinks;
         }

@@ -19,7 +19,7 @@ namespace ScheduleParserWPFFrontend
         {
             InitializeComponent();
             RoomCodeTbx.Text = _pattern;
-            _schedulePlansDirector = new SchedulePlansDirector(new FacultyPageParser(), new ScheduleFilesDownloader(), new PdfParser(), null);
+            _schedulePlansDirector = new SchedulePlansDirector(new FacultyPageParser(), new ScheduleFilesDownloader(), new PdfParser(), new ExcelParser());
             FacultyWebpageTextBox.Text = FacultyWebpage;
         }
 
@@ -50,7 +50,7 @@ namespace ScheduleParserWPFFrontend
 
             await _schedulePlansDirector.GetSchedulePlansFiles();
             _schedulePlansDirector.ParsePdfs(_pattern);
-            //_schedulePlansDirector.ParseExcel();
+            _schedulePlansDirector.ParseExcel(_pattern);
         }
     }
 }

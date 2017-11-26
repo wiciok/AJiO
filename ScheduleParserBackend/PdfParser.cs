@@ -8,10 +8,10 @@ using ScheduleParserBackend.Interfaces;
 
 namespace ScheduleParserBackend
 {
-    public class PdfParser: IFacultyPlansParserPdf
+    public class PdfParser : IFacultyPlansParserPdf
     {
         private string _patternToSearch;
-        private int _patternOccurenceNumber=0;
+        private int _patternOccurenceNumber;
 
         public IParsingResultPdf Parse(Stream file, string patternToSearch)
         {
