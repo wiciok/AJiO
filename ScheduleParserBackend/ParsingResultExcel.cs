@@ -7,6 +7,6 @@ namespace ScheduleParserBackend
 {
     public class ParsingResultExcel : IParsingResultExcel
     {
-        public IList<ScheduleEntry> ScheduleEntriesList;
+        public IList<ScheduleEntry> ScheduleEntriesList { get; set; }
     }
 }

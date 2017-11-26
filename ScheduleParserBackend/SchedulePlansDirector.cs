@@ -4,7 +4,9 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using ScheduleParserBackend.Interfaces;
+using ScheduleParserBackend.OutputModel;
 
 namespace ScheduleParserBackend
 {
@@ -14,6 +16,7 @@ namespace ScheduleParserBackend
         private IList<Tuple<Stream, ScheduleFileType>> _scheduleFiles;
         private IList<IParsingResultPdf> _parsingResultsPdf;
         private IList<IParsingResultExcel> _parsingResultsExcel;
+        private IEnumerable<ACSchedule> _finalResult;
 
         private readonly IFacultyPageParser _facultyPageParser;
         private readonly IScheduleFilesDownloader _scheduleFilesDownloader;
@@ -43,6 +46,11 @@ namespace ScheduleParserBackend
         public async Task GetSchedulePlansFiles()
         {
             _scheduleFiles = await _scheduleFilesDownloader.GetSchedulePlansFiles(_schedulePlansLinks);
+        }
+
+        public int GetPatternOccurenciesFromPdfParsing()
+        {
+            return _parsingResultsPdf.Where(result => result.PatternOccured).Sum(result => result.PatternOccurenciesNumber);
         }
 
         public void ParsePdfs(string pattern)
@@ -75,10 +83,22 @@ namespace ScheduleParserBackend
             }
         }
 
-        public IFinalParsingResult CombineResults()
+        public void CollectResultsAndAddOffset(int offset)
         {
-            throw new NotImplementedException();
+            var allResults = _parsingResultsExcel.SelectMany(x => x.ScheduleEntriesList);
+
+            IList<ACSchedule> list = allResults.Select(x => new ACSchedule { StartTime = x.StartTime.AddMinutes(-1*offset), EndTime = x.EndTime, ScheduleType = ScheduleType.EveryDayOfWeek }).ToList();
+            _finalResult = list;
         }
 
+        public void SerializeAndSaveResults()
+        {
+            var pathToFile = @"./" + typeof(ACSchedule).Name + ".json";
+            using (StreamWriter file = File.CreateText(pathToFile))
+            {
+                var serializer = JsonSerializer.Create();
+                serializer.Serialize(file, _finalResult);
+            }
+        }
     }
 }

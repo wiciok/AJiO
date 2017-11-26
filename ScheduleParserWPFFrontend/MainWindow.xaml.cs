@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using ScheduleParserBackend;
@@ -30,7 +31,7 @@ namespace ScheduleParserWPFFrontend
                 _pattern = newText;
         }
 
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        private void OffsetTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             if(int.TryParse((sender as TextBox)?.Text, out var newValue))
                 _scheduleOffsetInMinutes = newValue;
@@ -51,6 +52,31 @@ namespace ScheduleParserWPFFrontend
             await _schedulePlansDirector.GetSchedulePlansFiles();
             _schedulePlansDirector.ParsePdfs(_pattern);
             _schedulePlansDirector.ParseExcel(_pattern);
+
+            SaveButton.IsEnabled = true;
+        }
+
+        private void SaveButton_Click(object sender, RoutedEventArgs e)
+        {
+            _schedulePlansDirector.CollectResultsAndAddOffset(_scheduleOffsetInMinutes);
+
+            var pdfOccurencies = _schedulePlansDirector.GetPatternOccurenciesFromPdfParsing();
+
+            MessageBox.Show(pdfOccurencies == 0
+                ? "Brak dodatkowych danych z planów zapisanych w plikach pdf do uwzględnienia!"
+                : $"Kod sali pojawiał się w planach zapisanych w plikach pdf {pdfOccurencies} razy. Zadbaj o ręczne spradzenie planów");
+
+            try
+            {
+                _schedulePlansDirector.SerializeAndSaveResults();
+                MessageBox.Show("Plik z danymi zapisany pomyślnie!");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Wystąpił błąd podczas zapisywania pliku wynikowego!");
+            }
+
+            
         }
     }
 }

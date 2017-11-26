@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ScheduleParserBackend.Interfaces
 {
-    public interface IParsingResultPdf: IParsingResult
+    public interface IParsingResultPdf
     {
         bool PatternOccured { get; }
         int PatternOccurenciesNumber { get; set; }
