@@ -42,6 +42,8 @@ namespace ScheduleParserWPFFrontend
 
         private async void DownloadPlansButton_Click(object sender, RoutedEventArgs e)
         {
+            SaveButton.IsEnabled = false;
+
             var plansList = await _schedulePlansDirector.GetSchedulePlansLinks();
 
             var strBuilder = new StringBuilder();
