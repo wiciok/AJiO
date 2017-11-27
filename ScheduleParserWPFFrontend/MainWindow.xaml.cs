@@ -67,7 +67,7 @@ namespace ScheduleParserWPFFrontend
 
             MessageBox.Show(pdfOccurencies == 0
                 ? "Brak dodatkowych danych z planów zapisanych w plikach pdf do uwzględnienia!"
-                : $"Kod sali pojawiał się w planach zapisanych w plikach pdf {pdfOccurencies} razy. Zadbaj o ręczne spradzenie planów");
+                : $"Kod sali pojawiał się w planach zapisanych w plikach pdf {pdfOccurencies} razy. Zadbaj o ręczne sprawdzenie planów");
 
             try
             {
