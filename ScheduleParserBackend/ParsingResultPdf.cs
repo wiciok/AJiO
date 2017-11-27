@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using ScheduleParserBackend.Interfaces;
+﻿using ScheduleParserBackend.Interfaces;
 
 namespace ScheduleParserBackend
 {
-    class ParsingResultPdf: IParsingResultPdf
+    internal class ParsingResultPdf: IParsingResultPdf
     {
         public int PatternOccurenciesNumber { get; set; }
         public bool PatternOccured => PatternOccurenciesNumber != 0;

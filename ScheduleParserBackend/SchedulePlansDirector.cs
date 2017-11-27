@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -25,16 +24,16 @@ namespace ScheduleParserBackend
 
         public SchedulePlansDirector
         (
-            IFacultyPageParser facultyPageParser, 
-            IScheduleFilesDownloader scheduleFilesDownloader, 
-            IFacultyPlansParserPdf pdfParser, 
+            IFacultyPageParser facultyPageParser,
+            IScheduleFilesDownloader scheduleFilesDownloader,
+            IFacultyPlansParserPdf pdfParser,
             IFacultyPlansParserExcel excelParser
         )
         {
             _facultyPageParser = facultyPageParser;
             _scheduleFilesDownloader = scheduleFilesDownloader;
             _excelParser = excelParser;
-            _pdfParser = pdfParser;                    
+            _pdfParser = pdfParser;
         }
 
         public async Task<IEnumerable<string>> GetSchedulePlansLinks()
@@ -62,7 +61,7 @@ namespace ScheduleParserBackend
                 .Select(x => x.Item1);
 
             foreach (var file in pdfFiles)
-            { 
+            {
                 var parsingResult = _pdfParser.Parse(file, pattern);
                 _parsingResultsPdf.Add(parsingResult);
             }
@@ -86,8 +85,17 @@ namespace ScheduleParserBackend
         public void CollectResultsAndAddOffset(int offset)
         {
             var allResults = _parsingResultsExcel.SelectMany(x => x.ScheduleEntriesList);
+            var id = 0;
 
-            IList<ACSchedule> list = allResults.Select(x => new ACSchedule { StartTime = x.StartTime.AddMinutes(-1*offset), EndTime = x.EndTime, ScheduleType = ScheduleType.EveryDayOfWeek }).ToList();
+            IList<ACSchedule> list = allResults.Select(x => new ACSchedule
+            {
+                Id = id++,
+                StartTime = x.Item1.AddMinutes(-1 * offset),
+                EndTime = x.Item2,
+                ScheduleType = ScheduleType.EveryDayOfWeek 
+            })
+            .ToList();
+
             _finalResult = list;
         }
 

@@ -1,11 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2008
+VisualStudioVersion = 15.0.27004.2009
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScheduleParserBackend", "ScheduleParserBackend\ScheduleParserBackend.csproj", "{06246365-0B12-4FDD-82A4-449AFD5787C3}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScheduleParserConsoleFrontend", "ScheduleParserConsoleFrontend\ScheduleParserConsoleFrontend.csproj", "{C1B91237-D5C5-46B2-98B7-B3C2C9E25213}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScheduleParserWPFFrontend", "ScheduleParserWPFFrontend\ScheduleParserWPFFrontend.csproj", "{F4A3F00F-1456-4816-9F9A-EADABB9E68CF}"
 EndProject
@@ -19,10 +17,6 @@ Global
 		{06246365-0B12-4FDD-82A4-449AFD5787C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{06246365-0B12-4FDD-82A4-449AFD5787C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{06246365-0B12-4FDD-82A4-449AFD5787C3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C1B91237-D5C5-46B2-98B7-B3C2C9E25213}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C1B91237-D5C5-46B2-98B7-B3C2C9E25213}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C1B91237-D5C5-46B2-98B7-B3C2C9E25213}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C1B91237-D5C5-46B2-98B7-B3C2C9E25213}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F4A3F00F-1456-4816-9F9A-EADABB9E68CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F4A3F00F-1456-4816-9F9A-EADABB9E68CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F4A3F00F-1456-4816-9F9A-EADABB9E68CF}.Release|Any CPU.ActiveCfg = Release|Any CPU

@@ -25,7 +25,7 @@ namespace ScheduleParserBackend
             var list = _cellsWithPattern.Select(delegate (ICell cell)
             {
                 var startTime = GetStartTimeForCell(cell);
-                return new ScheduleEntry(startTime, GetEndTimeForCell(cell, startTime));
+                return new Tuple<DateTime, DateTime>(startTime, GetEndTimeForCell(cell, startTime));
             });
 
 
@@ -74,7 +74,12 @@ namespace ScheduleParserBackend
                 }
             }
 
-            startTime = GetDateWithSpecifiedDayOfWeekAndPreserveTime(startTime, GetDayOfWeek(hourCell));
+            try
+            {
+                startTime = GetDateWithSpecifiedDayOfWeekAndPreserveTime(startTime, GetDayOfWeek(hourCell));
+            }
+            catch(Exception e) { }
+            
 
             return startTime;
         }

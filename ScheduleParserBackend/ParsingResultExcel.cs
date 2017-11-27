@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using ScheduleParserBackend.Interfaces;
 
 namespace ScheduleParserBackend
 {
-    public class ParsingResultExcel : IParsingResultExcel
+    internal class ParsingResultExcel : IParsingResultExcel
     {
-        public IList<ScheduleEntry> ScheduleEntriesList { get; set; }
+        public IList<Tuple<DateTime, DateTime>> ScheduleEntriesList { get; set; }
     }
 }
