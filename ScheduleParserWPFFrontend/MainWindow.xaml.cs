@@ -2,7 +2,9 @@
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using ScheduleParserBackend;
+using ScheduleParserBackend.Factories;
+using ScheduleParserBackend.Factories.Interfaces;
+using ScheduleParserBackend.Interfaces;
 
 namespace ScheduleParserWPFFrontend
 {
@@ -11,7 +13,7 @@ namespace ScheduleParserWPFFrontend
     /// </summary>
     public partial class MainWindow : Window
     {
-        private readonly SchedulePlansDirector _schedulePlansDirector;
+        private readonly ISchedulePlansDirector _schedulePlansDirector;
         private string _pattern = "F112";
         private int _scheduleOffsetInMinutes = 0;
         private const string FacultyWebpage = "http://www.fmi.pk.edu.pl/?page=rozklady_zajec.php";
@@ -20,7 +22,8 @@ namespace ScheduleParserWPFFrontend
         {
             InitializeComponent();
             RoomCodeTbx.Text = _pattern;
-            _schedulePlansDirector = new SchedulePlansDirector(new FacultyPageParser(), new ScheduleFilesDownloader(), new PdfParser(), new ExcelParser());
+            ISchedulePlansDirectorFactory directorFactory = new SchedulePlansDirectorFactory();
+            _schedulePlansDirector = directorFactory.GetSchedulePlansDirector();
             FacultyWebpageTextBox.Text = FacultyWebpage;
         }
 
