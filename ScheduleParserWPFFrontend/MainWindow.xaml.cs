@@ -70,13 +70,16 @@ namespace ScheduleParserWPFFrontend
             {
                 _schedulePlansDirector.SerializeAndSaveResults();
                 MessageBox.Show("Plik z danymi zapisany pomyślnie!");
+
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Wystąpił błąd podczas zapisywania pliku wynikowego!");
             }
-
-            
+            finally
+            {
+                Application.Current.Shutdown();
+            }          
         }
     }
 }

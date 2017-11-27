@@ -74,7 +74,49 @@ namespace ScheduleParserBackend
                 }
             }
 
+            startTime = GetDateWithSpecifiedDayOfWeekAndPreserveTime(startTime, GetDayOfWeek(hourCell));
+
             return startTime;
+        }
+
+        private DayOfWeek GetDayOfWeek(ICell hourCell)
+        {
+            var dayOfWeekDict = new Dictionary<string, DayOfWeek>
+            {
+                {"poniedziałek", DayOfWeek.Monday},
+                {"wtorek", DayOfWeek.Tuesday},
+                {"środa", DayOfWeek.Wednesday},
+                {"czwartek", DayOfWeek.Thursday},
+                {"piątek", DayOfWeek.Friday},
+            };
+
+            const int dayOfWeekCellIndex = 0;
+
+            var currentCheckedCell = hourCell.Row.GetCell(dayOfWeekCellIndex);
+            
+            while (string.IsNullOrEmpty(currentCheckedCell.StringCellValue))
+            {
+                currentCheckedCell = _workingSheet
+                    .GetRow(currentCheckedCell.RowIndex - 1)
+                    .GetCell(dayOfWeekCellIndex);
+            }
+            ;
+
+            var cellVal = currentCheckedCell.StringCellValue.ToLower();
+            var result = dayOfWeekDict.SingleOrDefault(x => x.Key.Equals(cellVal));
+
+            //if no valid day of week - return value will be 0 (Sunday)
+            return result.Value;
+        }
+
+        private static DateTime GetDateWithSpecifiedDayOfWeekAndPreserveTime(DateTime dateTime, DayOfWeek dayOfWeek)
+        {
+            while (dateTime.DayOfWeek != dayOfWeek)
+            {
+                dateTime = dateTime.AddDays(1);
+            }
+
+            return dateTime;
         }
 
         //iterates up
@@ -112,7 +154,7 @@ namespace ScheduleParserBackend
             }
             catch (NullReferenceException ex)
             {
-                //NPOI incorrectly throws NullReferenceExceptions on GetCell method, when its possible to get problematic cell via Cells[index]
+                //NPOI incorrectly throws NullReferenceExceptions on GetCell method, when its possible to get problematic hourCell via Cells[index]
                 //this is just workaaround for this issue
             }
            
